@@ -1,4 +1,105 @@
+import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { UserDetail } from "../../recoil/atom";
+import style from './register.module.css'
+import Button from "../../molecules/customButton/button";
+import Input from "../../molecules/customInput/input";
+import{
+  validateName,
+  validateLastName,
+  validatePassword,
+  validateEmail,
+  validatePhoneNumber,
+} from '../../helper/helper'
+
 function Register(){
+  const [firstName,setFirstName] = useState("")
+  const [lastName,setlastName] = useState("")
+  const [email,setEmail] = useState("")
+  const [phoneNumber,setPhoneNumber] = useState("")
+  const [password,setPassword] = useState("")
+  const [address,setAddress] = useState("")
+  const [landmark,setLandmark] = useState("")
+  const [FirstnameMessage, setFirstNameMessage] = useState("");
+  const [LastnameMessage, setLastNameMessage] = useState("");
+  const [EmailMessage, setEmailMessage] = useState("");
+  const [PasswordMessage, setPasswordMessage] = useState("");
+  const [AddressMessage, setAddressMessage] = useState("");
+  const [LandmarkMessage, setLandmarkMessage] = useState("");
+  const [PhoneNumberMessage, setPhoneNumberMessage] = useState("");
+  const [userData,setUserData] = useRecoilState(UserDetail)
+
+ function handleClick(e){
+  e.preventDefault()
+  if(
+    firstName &&
+    lastName &&
+    email &&
+    phoneNumber &&
+    password &&
+    address &&
+    landmark 
+    ){
+     let status = true;
+
+     if(!validateName(firstName)){
+      setFirstNameMessage("Invalid first name! Your first name must only contain alphabets and should be less than or equal to 20 characters")
+     status = false     
+     } else{
+    setFirstNameMessage("")
+     }
+
+      if(!validateLastName(lastName)){
+        setLastNameMessage("Invalid last name! Your last name must only contain alphabets and should be less than or equal to 20 characters")
+      status = false
+      } else{
+        setLastNameMessage("")
+      }
+      
+      if(!validatePhoneNumber){
+        setPhoneNumberMessage("Invalid Phone Number")
+        status = false
+      } else {
+        setPhoneNumberMessage("")
+      }
+
+      if(!validateEmail){
+        setEmailMessage("Invalid Email")
+        status = false
+      } else{
+        setEmailMessage("")
+      }
+
+      if(!validatePassword){
+        setPasswordMessage("Invalid Password")
+        status = false
+      } else{
+        setPasswordMessage("")
+      }
+
+      if(status){
+        setUserData([...userData,
+          {
+            Email: email,
+            FirstName: firstName,
+            LastName: lastName,
+            PhoneNumber: phoneNumber,
+            Password: password,
+            Landmark : landmark,
+            Address: address,
+          }
+          ])
+          alert("Registerd Sucessfully")
+        console.log(userData)
+      }
+
+
+    } else {
+      alert("Please fill all the details")
+    }
+ }
+
+    
     return(
         <div className={style.main}>
         <form className={style.form}>
@@ -22,6 +123,18 @@ function Register(){
               onChange={(inputLName) => {
                 setlastName(inputLName);
               }}
+
+              // export default function Input(props){
+              //   return(
+              //       <input placeholder={props.placeholder} 
+              //        onChange={(e)=>props.onChange(e.target.value.trim())} 
+              //        value={props.value} 
+              //        className={props.className} 
+              //        type={props.type}/>
+              //   )
+              //   }
+
+
             />
           </section>
           <span className={style.message}>{LastnameMessage} </span>
@@ -92,6 +205,6 @@ function Register(){
         </form>
       </div>
     )
-}
+            } 
 
 export default Register;
